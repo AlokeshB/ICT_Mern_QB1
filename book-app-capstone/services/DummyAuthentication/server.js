@@ -32,8 +32,8 @@ app.post('/register', async (req, res) => {
     try {
         
         const existingUser = await User.findOne({ username });
-        console.log(existingUser);
         if (existingUser) {
+            console.log(existingUser);
             return res.status(400).json({ message: 'Username already taken' });
         }
 
