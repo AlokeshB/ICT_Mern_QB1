@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Demo</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background-color: #f4f4f9; }
+        .container { display: flex; gap: 50px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
+        h2 { text-align: center; color: #333; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .message { margin-top: 10px; text-align: center; font-size: 0.9em; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Register</h2>
+        <input type="text" id="reg-username" placeholder="Username">
+        <input type="password" id="reg-password" placeholder="Password">
+        <button onclick="register()">Register</button>
+        <div id="reg-message" class="message"></div>
+    </div>
+
+    <div class="card">
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username">
+        <input type="password" id="login-password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <div id="login-message" class="message"></div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:5000';
+
+    // Registration Logic
+    async function register() {
+        const username = document.getElementById('reg-username').value;
+        const password = document.getElementById('reg-password').value;
+        const msgBox = document.getElementById('reg-message');
+
+        try {
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            
+            msgBox.textContent = data.message;
+            msgBox.className = response.ok ? 'message success' : 'message error';
+        } catch (err) {
+            console.error(err);
+            msgBox.textContent = "Server Error";
+            msgBox.className = 'message error';
+        }
+    }
+
+    // Login Logic
+    async function login() {
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const msgBox = document.getElementById('login-message');
+
+        try {
+            const response = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+
+            msgBox.textContent = data.message;
+            msgBox.className = response.ok ? 'message success' : 'message error';
+        } catch (err) {
+            console.error(err);
+            msgBox.textContent = "Server Error";
+            msgBox.className = 'message error';
+        }
+    }
+</script>
+
+</body>
+</html>
